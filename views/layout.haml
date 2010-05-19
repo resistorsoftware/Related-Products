@@ -1,0 +1,17 @@
+!!! Strict
+%html{:xmlns => "http://www.w3.org/1999/xhtml", "xml:lang" => "en", :lang => "en"}
+  %head
+    %title Resistor Software <=> Related Products Application
+    %meta{'http-equiv' => 'Content-Type', 'content' => "text/html;charset=UTF-8"}
+    %script{:src => "http://www.google.com/jsapi", :type => "text/javascript"}
+    :javascript
+      google.load('jquery', '1.4.1');
+    :css
+      .related_products {display: none;}
+  %body
+    #main
+      #header
+        %h1 Resistor Software <=> Related Products Application
+      #content= yield
+    #footer &copy; 2010 Resistor Software
+

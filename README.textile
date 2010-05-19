@@ -1,0 +1,15 @@
+h1. Related Products
+
+This is a Shopify Application running on Sinatra. At the moment it is without any real style. That will change once I fire up Compass and compile some SASS into the project. The purpose of this application is quite simple. When editing a Product in the Shopify admin, you can click a link to establish related products for the Product. The algorithm is simple. You enter some tags that will locate the products you want to be related to the one you're working on. The system will find all the matching Products and save them as a set or collection. This set is then saved in a special Metafield namespaced as related_products. In Liquid, you can then look for the namespace related_products, and if it exists, you can save the value which represents the related products. 
+
+h2. Why?
+
+Most related product algorithms I have seen operate using tags in the same way. They iterate using Liquid forloops over huge collections like all products. This is terribly inefficient. The idea was to create a custom collection for related products. The problem with this is not only a potentially huge number of collections to manage due to the addition of these related product collections, but also, Shopify smart collections currently have no interaction with Tags. Therefore, managing any collection is a manual endeavor which limits the use of this technique.
+
+My application is simple and solves these problems. If you want to relate a product to other products, simply provide any Tags you think are needed to tie them together. The application creates everything and you're done. Of course, this algorithm is now ripe for further customizing. You could search only desired collections for products, perhaps provide a whitelist and blacklist of tags to search, many many options. Also, providing a limit on the number of products in the set is easily added.  
+
+h2. Usage
+
+Add the application to your Shopify Admin, and go to town. The source code is all here, assuming you have some skills with Sinatra and Ruby, it is open-source and easy to hack. I have not published the App on the App store, but maybe that will happen one day.
+
+The original inspiration goes to Jesse Storimer for his Sinatra app made public last summer.

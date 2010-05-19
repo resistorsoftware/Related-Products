@@ -1,0 +1,24 @@
+%h1
+  Working on Product 
+  %strong #{@product.title}
+%p
+  Product handle is
+  %strong #{@product.handle}
+
+%form{:action =>'/related', :method => 'post'}
+  %input{:type => 'hidden', :name => 'id', :value => @product.id}
+  %label{:for => 'tags'} Enter tag(s) to assign to collection (Comma delimited if more than one)
+  %input{:type => 'text', :id => 'tags', :name => 'tags', :value => ''}
+  %input{:type => "submit", :name => 'submit', :value => 'Submit'}
+  
+- unless @product.metafields.empty?
+  %p The Product currently has MetaFields
+  %ul
+  - @product.metafields.each do |mf|
+    - if mf.namespace == 'related_products'
+      %li
+        Metafield namespace #{mf.namespace} #{mf.id}
+        - if mf.namespace == 'related_products'
+          %div.related_products= mf.value  
+- else
+  %p No Metafield for Related Products was found
