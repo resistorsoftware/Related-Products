@@ -5,7 +5,8 @@ require 'json'
 require File.dirname(__FILE__) + '/lib/sinatra/shopify'
 
 get '/' do
-  redirect '/login'
+  !authorize
+  haml :index
 end
 
 get '/login' do 
