@@ -12,6 +12,27 @@ get '/login' do
   haml :login
 end
 
+get '/logout' do
+  logout!
+  redirect '/'
+end
+
+post '/login/authenticate' do      
+  redirect ShopifyAPI::Session.new(params[:shop]).create_permission_url
+end
+
+get '/login/finalize' do
+  shopify_session = ShopifyAPI::Session.new(params[:shop], params[:t])
+  if shopify_session.valid?
+    session[:shopify] = shopify_session
+    return_address = session[:return_to] || '/'
+    session[:return_to] = nil
+    redirect return_address
+  else
+    redirect '/login'
+  end
+end
+
 get '/related' do      
   authorize! 
   @product = ShopifyAPI::Product.find(params[:id]) 
