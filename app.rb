@@ -12,7 +12,8 @@ end
 
 # hitting this action with tags should assign a metafield known as related_products with all the products that matched the tag(s)
 post '/related' do
-   authorize!        
+   authorize!  
+   #ShopifyAPI::Metafield.delete(64032)      
    puts "Looking Products with tags #{params[:tags]}\n"     
    @tags = params[:tags].split(',')     
    @product = ShopifyAPI::Product.find(params[:id])
@@ -31,19 +32,20 @@ post '/related' do
    results = []
    unless @tags.empty?
      all.each do |product|
-       unless product.tags.empty? 
+       unless product.tags.empty? or (product.id == @product.id) 
          # User checks tags, and product has tags so away we go.
          puts "Product tags #{product.tags}\n" 
          source = product.tags.strip().split(',') 
          max_size = @tags.length + source.length                  
-         #puts "@tag size #{@tags.length}, source size #{source.length}\n"
-         test = @tags.concat(source)   
-         #puts "Test size #{test.length}, max_size #{max_size}\n"    
+         puts "@tag size #{@tags.length}, source size #{source.length}\n"
+         test = @tags + source   
+         puts "Test array, #{test}, Test size #{test.length}, max_size #{max_size}\n"    
          if test.uniq.size < max_size
            puts "We found a product with tag(s) #{source} matching from #{@tags} so add it to the collection\n" 
            #todo: build a JSON Object for this... 
-           results << product unless product.id == @product.id
+           results << product
          end
+         test.clear
        else 
          puts "Product #{product.title} had no tags!"
        end  
