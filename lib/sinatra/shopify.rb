@@ -31,17 +31,15 @@ module Sinatra
         credentials = YAML.load(File.read(config))    
         ShopifyAPI::Session.setup(credentials)
       else                           
-        puts "\nHeroku checking for Credentials, API_KEY #{ENV['SHOPIFY_API_KEY']}, SECRET #{ENV['SHOPIFY_API_SECRET']}\n"
         ShopifyAPI::Session.setup(
           :api_key => ENV['SHOPIFY_API_KEY'],
           :secret => ENV['SHOPIFY_API_SECRET']
         )
       end
       
-      app.get '/login' do 
-        puts "Call reached login "
-        haml :login
-      end
+      #app.get '/login' do 
+      #  haml :login
+      #end
       
       app.get '/logout' do
         logout!
@@ -49,7 +47,6 @@ module Sinatra
       end
 
       app.post '/login/authenticate' do      
-        puts "The shop is #{params[:shop]}\nredirecting to #{ShopifyAPI::Session.new(params[:shop]).create_permission_url}\n\n" 
         redirect ShopifyAPI::Session.new(params[:shop]).create_permission_url
       end
       
@@ -57,7 +54,6 @@ module Sinatra
         shopify_session = ShopifyAPI::Session.new(params[:shop], params[:t])
         if shopify_session.valid?
           session[:shopify] = shopify_session
-
           return_address = session[:return_to] || '/'
           session[:return_to] = nil
           redirect return_address

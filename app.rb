@@ -8,6 +8,10 @@ get '/' do
   haml :index
 end
 
+get '/login' do 
+  haml :login
+end
+
 get '/related' do      
   authorize! 
   @product = ShopifyAPI::Product.find(params[:id]) 
