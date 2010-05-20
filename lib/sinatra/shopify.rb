@@ -25,7 +25,6 @@ module Sinatra
     end
 
     def self.registered(app)     
-      puts "Registering the Application\nLooking for credentials in #{File.dirname(__FILE__)}\n"
       app.helpers Shopify::Helpers
       app.enable :sessions
 
@@ -33,9 +32,9 @@ module Sinatra
       if File.exist?(File.dirname(__FILE__) + "/shopify.yml")
         config = File.dirname(__FILE__) + "/shopify.yml"
         credentials = YAML.load(File.read(config))    
-        puts "Credentials are #{credentials}\n"
         ShopifyAPI::Session.setup(credentials)
-      else
+      else                           
+        puts "\nHeroku checking for Credentials, API_KEY #{ENV['SHOPIFY_API_KEY']}\n"
         ShopifyAPI::Session.setup(
           :api_key => ENV['SHOPIFY_API_KEY'],
           :secret => ENV['SHOPIFY_API_SECRET']
