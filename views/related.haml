@@ -16,6 +16,7 @@
     
   - unless @product.metafields.empty?
     - @product.metafields.each do |mf|
+      %p MetaField ID #{mf.id}
       - if mf.key == 'related_products' and !@results.empty?
         %h2 Current Related Products
         %ul
