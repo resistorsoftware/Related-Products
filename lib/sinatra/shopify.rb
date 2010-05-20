@@ -1,8 +1,6 @@
 require 'sinatra/base'
 require 'active_support'
 require 'active_resource'
-
-#gem 'shopify_api'
 require 'shopify_api'
 
 module Sinatra
@@ -15,7 +13,6 @@ module Sinatra
 
       def authorize!
         redirect '/login' unless current_shop
-
         ActiveResource::Base.site = session[:shopify].site
       end
 
@@ -34,14 +31,15 @@ module Sinatra
         credentials = YAML.load(File.read(config))    
         ShopifyAPI::Session.setup(credentials)
       else                           
-        puts "\nHeroku checking for Credentials, API_KEY #{ENV['SHOPIFY_API_KEY']}\n"
+        puts "\nHeroku checking for Credentials, API_KEY #{ENV['SHOPIFY_API_KEY']}, SECRET #{ENV['SHOPIFY_API_SECRET']}\n"
         ShopifyAPI::Session.setup(
           :api_key => ENV['SHOPIFY_API_KEY'],
           :secret => ENV['SHOPIFY_API_SECRET']
         )
       end
       
-      app.get '/login' do
+      app.get '/login' do 
+        puts "Call reached login "
         haml :login
       end
       
