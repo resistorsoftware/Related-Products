@@ -54,60 +54,37 @@ end
 # hitting this action with tags should assign a metafield known as related_products with all the products that matched the tag(s)
 post '/related' do
    authorize!  
-   #ShopifyAPI::Metafield.delete(64032)      
-   puts "Looking Products with tags #{params[:tags]}\n"     
    @tags = params[:tags].split(',')     
    @product = ShopifyAPI::Product.find(params[:id])
-   
-   # mf = {
-   #   :namespace => 'engravings',
-   #   :value => 'sample',
-   #   :value_type => 'string'
-   # }.merge!(item)
-   # product.add_metafield(ShopifyAPI::Metafield.new(mf)
-        
    @collection = ShopifyAPI::CustomCollection.find(:first, :params => {:title => @product.handle})
-   # for each tag, loop through all the products in the store looking for matchs
+   # for each tag, loop through all the products in the store looking for ones that match
    all = ShopifyAPI::Product.find(:all)
-   puts "Found there are #{all.length} products in this store to check"
-   @results = []
-   results = [] 
+   @results = [] # pass this on to the view
+   data = [] # data for the metafield
    unless @tags.empty?
      all.each do |product|
        unless product.tags.empty? or (product.id == @product.id) 
-         # User checks tags, and product has tags so away we go.
-         puts "Product #{product.title} has tags #{product.tags}\n" 
-         source = product.tags.gsub(/\s/,'').split(',') 
+         source = product.tags.gsub(/\s/,'').split(',') # remove the nasty Shopify induced extra space
          max_size = @tags.length + source.length                  
-         puts "@tag size #{@tags.length}, source size #{source.length}\n"
          test = @tags + source   
-         puts "Test array, [#{test.join(',')}], Test size #{test.length}, max_size #{max_size}, unique test size #{test.uniq.length}\n"    
          if test.uniq.length < max_size
-           puts "We found a product with tag(s) #{source} matching from #{@tags} so add it to the collection\n" 
-           #todo: build a JSON Object for this... 
-           results << product
+           data << product
            @results << product.title
          end
-         test.clear
-       else 
-         puts "Product #{product.title} had no tags!"
-       end  
      end
    end
-   unless results.empty?                            
+   unless data.empty?                            
      mf = {
        :namespace => 'related_products',
        :value_type => 'string',
-       :value => results.to_json,
+       :value => data.to_json,
        :key => 'related_products',
-       :description => ""
+       :description => "Related Products for #{@product.title}"
      }
      @product.add_metafield(ShopifyAPI::Metafield.new(mf))
-     puts "Added a new metafield with #{results.length} Products, #{@results}"
    end
    haml :related  
 end
-
 
 delete '/destroy' do
   authorize! 
