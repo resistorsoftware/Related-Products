@@ -71,6 +71,7 @@ post '/related' do
            data << product
            @results << product.title
          end
+       end
      end
    end
    unless data.empty?                            
