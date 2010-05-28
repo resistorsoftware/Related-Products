@@ -14,7 +14,6 @@ module Sinatra
       def authorize!
         redirect '/login' unless current_shop
         ActiveResource::Base.site = session[:shopify].site
-        puts "Session URL #{session[:shopify].site}\n"
       end
 
       def logout!
