@@ -14,6 +14,7 @@ module Sinatra
       def authorize!
         redirect '/login' unless current_shop
         ActiveResource::Base.site = session[:shopify].site
+        puts "Session URL #{session[:shopify].site}\n"
       end
 
       def logout!
@@ -37,31 +38,6 @@ module Sinatra
         )
       end
       
-      #app.get '/login' do 
-      #  haml :login
-      #end
-      
-      #app.get '/logout' do
-      #  logout!
-      ##  redirect '/'
-      end
-
-      #app.post '/login/authenticate' do      
-      #  redirect ShopifyAPI::Session.new(params[:shop]).create_permission_url
-      #end
-      
-      # app.get '/login/finalize' do
-      #         shopify_session = ShopifyAPI::Session.new(params[:shop], params[:t])
-      #         if shopify_session.valid?
-      #           session[:shopify] = shopify_session
-      #           return_address = session[:return_to] || '/'
-      #           session[:return_to] = nil
-      #           redirect return_address
-      #         else
-      #           redirect '/login'
-      #         end
-      #       end  
-    #end
   end
 
   register Shopify
