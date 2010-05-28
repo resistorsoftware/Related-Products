@@ -14,6 +14,7 @@ module Sinatra
       def authorize!
         redirect '/login' unless current_shop
         ActiveResource::Base.site = session[:shopify].site
+        puts "Auth URL #{ActiveResource::Base.site}\n"
       end
 
       def logout!
@@ -36,7 +37,7 @@ module Sinatra
           :secret => ENV['SHOPIFY_API_SECRET']
         )
       end
-      
+    end
   end
 
   register Shopify
